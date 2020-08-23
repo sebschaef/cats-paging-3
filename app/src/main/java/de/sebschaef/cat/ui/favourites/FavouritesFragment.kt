@@ -1,4 +1,4 @@
-package de.sebschaef.cat.ui.home
+package de.sebschaef.cat.ui.favourites
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import de.sebschaef.cat.R
 
-class HomeFragment : Fragment() {
+class FavouritesFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var favouritesViewModel: FavouritesViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
+        favouritesViewModel =
+                ViewModelProviders.of(this).get(FavouritesViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_favourites, container, false)
+        val textView: TextView = root.findViewById(R.id.text_dashboard)
+        favouritesViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

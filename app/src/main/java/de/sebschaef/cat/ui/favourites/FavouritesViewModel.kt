@@ -1,13 +1,13 @@
-package de.sebschaef.cat.ui.home
+package de.sebschaef.cat.ui.favourites
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class HomeViewModel : ViewModel() {
+class FavouritesViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+        value = "This is dashboard Fragment"
     }
     val text: LiveData<String> = _text
 }
