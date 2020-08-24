@@ -2,21 +2,15 @@ package de.sebschaef.cat.ui.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.sebschaef.cat.repository.CatRepository
-import de.sebschaef.cat.repository.CatRepositoryImpl
-import kotlinx.coroutines.launch
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import de.sebschaef.cat.ui.adapter.RandomCatImagesPagingSource
 
 class ExploreViewModel : ViewModel() {
 
-    // TODO dependency injection
-    private val catRepository: CatRepository by lazy {
-        CatRepositoryImpl()
-    }
-
-    init {
-        viewModelScope.launch {
-            catRepository.getRandomCats(0)
-        }
-    }
+    val catImagesFlow = Pager(config = PagingConfig(pageSize = 10)) {
+        RandomCatImagesPagingSource()
+    }.flow.cachedIn(viewModelScope)
 
 }

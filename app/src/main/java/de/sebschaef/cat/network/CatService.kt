@@ -9,7 +9,7 @@ interface CatService {
     @GET("/v1/images/search")
     suspend fun searchImages(
         @Query("limit") limit: Int = 10,
-        @Query("page") page: Int = 0,
+        @Query("page") page: Int = 1,
         @Query("order") order: String = "random"
     ): List<ImageResponse>
 
