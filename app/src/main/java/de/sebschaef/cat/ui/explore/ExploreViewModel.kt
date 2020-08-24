@@ -1,13 +1,22 @@
 package de.sebschaef.cat.ui.explore
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import de.sebschaef.cat.repository.CatRepository
+import de.sebschaef.cat.repository.CatRepositoryImpl
+import kotlinx.coroutines.launch
 
 class ExploreViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    // TODO dependency injection
+    private val catRepository: CatRepository by lazy {
+        CatRepositoryImpl()
     }
-    val text: LiveData<String> = _text
+
+    init {
+        viewModelScope.launch {
+            catRepository.getRandomCats(0)
+        }
+    }
+
 }
