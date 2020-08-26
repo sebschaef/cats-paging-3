@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.persistence.FavouriteCatImagesDatabase
-import de.sebschaef.cat.repository.CatRepositoryImpl
+import de.sebschaef.cat.repository.CatRepository
 
 @OptIn(ExperimentalPagingApi::class)
 class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>() {
@@ -21,7 +21,7 @@ class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>() {
                 } ?: return MediatorResult.Success(endOfPaginationReached = true)
             }
 
-            val response = CatRepositoryImpl.getRandomCatImages(loadPage, 10) // TODO not random images
+            val response = CatRepository.getRandomCatImages(loadPage, 10) // TODO not random images
             FavouriteCatImagesDatabase.instance.favouriteCatImagesDao().insertAll(response)
 
             return MediatorResult.Success(endOfPaginationReached = response.isEmpty())

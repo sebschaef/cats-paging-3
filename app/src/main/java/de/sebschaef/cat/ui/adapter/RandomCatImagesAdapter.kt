@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import de.sebschaef.cat.R
 import de.sebschaef.cat.model.persistence.Image
 
-class RandomCatImagesAdapter :
+class RandomCatImagesAdapter(val onFavClicked: (Image, Boolean) -> Unit) :
     PagingDataAdapter<Image, ImageViewHolder>(ImageDiffer) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -19,11 +19,16 @@ class RandomCatImagesAdapter :
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val catImageView = holder.itemView.findViewById<ImageView>(R.id.iv_cat_image)
+        val favIcon = holder.itemView.findViewById<ImageView>(R.id.iv_fav)
 
-        getItem(position)?.let {
+        getItem(position)?.let { image ->
             Glide.with(catImageView)
-                .load(it.url)
+                .load(image.url)
                 .into(catImageView)
+
+            favIcon.setOnClickListener {
+                onFavClicked(image, true) // TODO unfaving
+            }
         }
     }
 }

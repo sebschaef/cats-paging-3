@@ -4,23 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import de.sebschaef.cat.R
+import de.sebschaef.cat.model.event.ExploreEvent
+import de.sebschaef.cat.model.persistence.Image
+import de.sebschaef.cat.model.state.ExploreState
 import de.sebschaef.cat.ui.adapter.RandomCatImagesAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ExploreFragment : Fragment() {
+class ExploreFragment : Fragment(), ExploreContract.View {
 
     private lateinit var exploreViewModel: ExploreViewModel
 
-    private val randomCatImagesAdapter = RandomCatImagesAdapter()
+    private val randomCatImagesAdapter = RandomCatImagesAdapter(this::onImageFavouriteClicked)
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -33,12 +34,33 @@ class ExploreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.rv_random_cat_images)
-        recyclerView.adapter = randomCatImagesAdapter
+        initRecyclerView()
+
+        exploreViewModel.viewState.observe(viewLifecycleOwner) {
+            render(it)
+        }
+    }
+
+    private fun initRecyclerView() {
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_random_cat_images)
+        recyclerView?.adapter = randomCatImagesAdapter
         lifecycleScope.launch {
             exploreViewModel.catImagesFlow.collectLatest {
                 randomCatImagesAdapter.submitData(it)
             }
         }
+    }
+
+    override fun render(exploreState: ExploreState) {
+        TODO("Not yet implemented")
+    }
+
+    private fun onImageFavouriteClicked(image: Image, isFavoured: Boolean) {
+        exploreViewModel.onViewEvent(
+            ExploreEvent.ImageFavouredChanged(
+                image = image,
+                isFavoured = isFavoured
+            )
+        )
     }
 }
