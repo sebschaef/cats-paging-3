@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import de.sebschaef.cat.R
 import de.sebschaef.cat.model.persistence.Image
 
-class RandomCatImagesAdapter(val onFavClicked: (Image, Boolean) -> Unit) :
+class CatImagesAdapter(val onFavClicked: (Image, Boolean) -> Unit) :
     PagingDataAdapter<Image, ImageViewHolder>(ImageDiffer) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =

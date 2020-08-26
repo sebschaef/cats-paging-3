@@ -14,14 +14,14 @@ class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>() {
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Image>): MediatorResult {
         try {
             val loadPage = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> 0
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> state.lastItemOrNull()?.let {
                     state.pages.size + 1
                 } ?: return MediatorResult.Success(endOfPaginationReached = true)
             }
 
-            val response = CatRepository.getRandomCatImages(loadPage, 10) // TODO not random images
+            val response = CatRepository.getFavourites("cat", loadPage, 10) // TODO no hardcoded values here
             FavouriteCatImagesDatabase.instance.favouriteCatImagesDao().insertAll(response)
 
             return MediatorResult.Success(endOfPaginationReached = response.isEmpty())

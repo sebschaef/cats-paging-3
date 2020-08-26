@@ -13,7 +13,7 @@ import de.sebschaef.cat.R
 import de.sebschaef.cat.model.event.ExploreEvent
 import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.model.state.ExploreState
-import de.sebschaef.cat.ui.adapter.RandomCatImagesAdapter
+import de.sebschaef.cat.ui.adapter.CatImagesAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -21,7 +21,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     private lateinit var exploreViewModel: ExploreViewModel
 
-    private val randomCatImagesAdapter = RandomCatImagesAdapter(this::onImageFavouriteClicked)
+    private val catImagesAdapter = CatImagesAdapter(this::onImageFavouriteClicked)
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -43,10 +43,10 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     private fun initRecyclerView() {
         val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_random_cat_images)
-        recyclerView?.adapter = randomCatImagesAdapter
+        recyclerView?.adapter = catImagesAdapter
         lifecycleScope.launch {
             exploreViewModel.catImagesFlow.collectLatest {
-                randomCatImagesAdapter.submitData(it)
+                catImagesAdapter.submitData(it)
             }
         }
     }

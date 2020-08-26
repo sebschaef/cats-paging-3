@@ -17,7 +17,7 @@ interface FavouriteCatImagesDao {
     suspend fun insertAll(users: List<Image>)
 
     @Query("SELECT * FROM favourite_cat_images")
-    fun pagingSource(query: String): PagingSource<Int, Image>
+    fun pagingSource(): PagingSource<Int, Image>
 
     @Query("DELETE FROM favourite_cat_images")
     suspend fun clearAll()

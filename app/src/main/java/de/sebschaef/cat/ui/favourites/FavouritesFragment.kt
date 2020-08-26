@@ -4,16 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import de.sebschaef.cat.R
+import de.sebschaef.cat.model.event.ExploreEvent
+import de.sebschaef.cat.model.event.FavouriteEvent
+import de.sebschaef.cat.model.persistence.Image
+import de.sebschaef.cat.model.state.FavouriteState
+import de.sebschaef.cat.ui.adapter.CatImagesAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class FavouritesFragment : Fragment() {
+class FavouritesFragment : Fragment(), FavouriteContract.View {
 
     private lateinit var favouritesViewModel: FavouritesViewModel
+
+    private val catImagesAdapter = CatImagesAdapter(this::onImageFavouriteClicked)
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -22,5 +30,29 @@ class FavouritesFragment : Fragment() {
     ): View? {
         favouritesViewModel = ViewModelProvider(this).get(FavouritesViewModel::class.java)
         return inflater.inflate(R.layout.fragment_favourites, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rv_favourite_cat_images)
+        recyclerView?.adapter = catImagesAdapter
+        lifecycleScope.launch {
+            favouritesViewModel.catImagesFlow.collectLatest {
+                catImagesAdapter.submitData(it)
+            }
+        }
+    }
+
+    override fun render(favouriteState: FavouriteState) {
+        TODO("Not yet implemented")
+    }
+
+    private fun onImageFavouriteClicked(image: Image, isFavoured: Boolean) {
+        favouritesViewModel.onViewEvent(
+            FavouriteEvent.ImageFavouredChanged(
+                image = image,
+                isFavoured = isFavoured
+            )
+        )
     }
 }

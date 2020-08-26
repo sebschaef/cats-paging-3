@@ -34,4 +34,13 @@ object CatRepository {
         )
     }
 
+    suspend fun getFavourites(userId: String, page: Int, pageSize: Int) =
+        catService.getFavourites(
+            subId = userId,
+            page = page,
+            limit = pageSize
+        )
+            .map { it.image }
+            .toImageList()
+
 }
