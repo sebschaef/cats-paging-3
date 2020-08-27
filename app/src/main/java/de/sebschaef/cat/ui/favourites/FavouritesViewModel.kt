@@ -8,7 +8,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import de.sebschaef.cat.model.event.FavouriteEvent
 import de.sebschaef.cat.model.state.FavouriteState
-import de.sebschaef.cat.persistence.FavouriteCatImagesDatabase
+import de.sebschaef.cat.persistence.ImagesDatabase
 import de.sebschaef.cat.ui.adapter.FavouriteCatImagesRemoteMediator
 
 class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel {
@@ -17,7 +17,7 @@ class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel {
         config = PagingConfig(pageSize = 10),
         remoteMediator = FavouriteCatImagesRemoteMediator()
     ) {
-        FavouriteCatImagesDatabase.instance.favouriteCatImagesDao().pagingSource()
+        ImagesDatabase.instance.imagesDao().pagingSource()
     }.flow.cachedIn(viewModelScope)
 
     override val viewState = MutableLiveData<FavouriteState>()

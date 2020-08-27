@@ -8,10 +8,10 @@ import androidx.room.Query
 import de.sebschaef.cat.model.persistence.Image
 
 @Dao
-interface FavouriteCatImagesDao {
+interface ImagesDao {
 
     @Query("SELECT * FROM favourite_cat_images")
-    fun getAll(): List<Image>
+    suspend fun getAll(): List<Image>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(users: List<Image>)
@@ -21,5 +21,8 @@ interface FavouriteCatImagesDao {
 
     @Query("DELETE FROM favourite_cat_images")
     suspend fun clearAll()
+
+    @Query("SELECT EXISTS (SELECT * FROM favourite_cat_images WHERE id = :imageId LIMIT 1)")
+    suspend fun contains(imageId: String): Boolean
 
 }

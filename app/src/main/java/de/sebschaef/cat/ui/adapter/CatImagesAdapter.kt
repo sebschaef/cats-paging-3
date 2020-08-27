@@ -26,8 +26,15 @@ class CatImagesAdapter(val onFavClicked: (Image, Boolean) -> Unit) :
                 .load(image.url)
                 .into(catImageView)
 
-            favIcon.setOnClickListener {
-                onFavClicked(image, true) // TODO unfaving
+            favIcon.apply {
+                setImageResource(
+                    if (image.isFavoured) R.drawable.ic_star_full else R.drawable.ic_star_outline
+                )
+                setOnClickListener {
+                    onFavClicked(image, !image.isFavoured)
+                    image.isFavoured = !image.isFavoured
+                    notifyItemChanged(position)
+                }
             }
         }
     }
