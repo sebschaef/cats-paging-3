@@ -24,6 +24,7 @@ class CatImagesAdapter(val onFavClicked: (Image, Boolean) -> Unit) :
         getItem(position)?.let { image ->
             Glide.with(catImageView)
                 .load(image.url)
+                .placeholder(R.drawable.ic_cat_half_transparent)
                 .into(catImageView)
 
             favIcon.apply {
