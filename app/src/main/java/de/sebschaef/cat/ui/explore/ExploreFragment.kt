@@ -45,8 +45,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     private fun initRecyclerView() {
         val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_random_cat_images)
-        recyclerView?.adapter = catImagesAdapter.withLoadStateHeaderAndFooter(
-            header = LoadStateAdapter(catImagesAdapter),
+        recyclerView?.adapter = catImagesAdapter.withLoadStateFooter(
             footer = LoadStateAdapter(catImagesAdapter)
         )
 

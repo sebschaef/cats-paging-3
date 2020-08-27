@@ -46,11 +46,10 @@ class FavouritesFragment : Fragment(), FavouriteContract.View {
 
     private fun initRecyclerView() {
         val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_favourite_cat_images)
-        recyclerView?.adapter = catImagesAdapter.withLoadStateHeaderAndFooter(
-            header = LoadStateAdapter(catImagesAdapter),
+        recyclerView?.adapter = catImagesAdapter.withLoadStateFooter(
             footer = LoadStateAdapter(catImagesAdapter)
         )
-        
+
         lifecycleScope.launch {
             favouritesViewModel.catImagesFlow.collectLatest {
                 catImagesAdapter.submitData(it)
