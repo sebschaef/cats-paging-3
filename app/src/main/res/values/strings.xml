@@ -2,6 +2,7 @@
     <string name="app_name">cat</string>
     <string name="title_explore">Explore</string>
     <string name="title_favourites">Favourites</string>
+    <string name="retry">Retry</string>
 
     <string name="username">cat</string>
 </resources>

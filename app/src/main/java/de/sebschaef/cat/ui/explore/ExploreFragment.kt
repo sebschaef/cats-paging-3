@@ -15,6 +15,7 @@ import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.model.state.ExploreState
 import de.sebschaef.cat.model.state.ExploreState.*
 import de.sebschaef.cat.ui.adapter.CatImagesAdapter
+import de.sebschaef.cat.ui.adapter.LoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -44,7 +45,11 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     private fun initRecyclerView() {
         val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_random_cat_images)
-        recyclerView?.adapter = catImagesAdapter
+        recyclerView?.adapter = catImagesAdapter.withLoadStateHeaderAndFooter(
+            header = LoadStateAdapter(catImagesAdapter),
+            footer = LoadStateAdapter(catImagesAdapter)
+        )
+
         lifecycleScope.launch {
             exploreViewModel.catImagesFlow.collectLatest {
                 catImagesAdapter.submitData(it)

@@ -16,6 +16,7 @@ import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.model.state.FavouriteState
 import de.sebschaef.cat.model.state.FavouriteState.*
 import de.sebschaef.cat.ui.adapter.CatImagesAdapter
+import de.sebschaef.cat.ui.adapter.LoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -45,7 +46,11 @@ class FavouritesFragment : Fragment(), FavouriteContract.View {
 
     private fun initRecyclerView() {
         val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_favourite_cat_images)
-        recyclerView?.adapter = catImagesAdapter
+        recyclerView?.adapter = catImagesAdapter.withLoadStateHeaderAndFooter(
+            header = LoadStateAdapter(catImagesAdapter),
+            footer = LoadStateAdapter(catImagesAdapter)
+        )
+        
         lifecycleScope.launch {
             favouritesViewModel.catImagesFlow.collectLatest {
                 catImagesAdapter.submitData(it)
