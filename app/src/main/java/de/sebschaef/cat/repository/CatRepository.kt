@@ -4,11 +4,9 @@ import de.sebschaef.cat.model.network.FavouriteRequest
 import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.network.ApiKeyInterceptor
 import de.sebschaef.cat.network.CatService
+import de.sebschaef.cat.network.toFavImageList
 import de.sebschaef.cat.network.toImageList
 import de.sebschaef.cat.persistence.ImagesDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -35,7 +33,11 @@ object CatRepository {
         catService.searchImages(page = page, limit = pageSize)
             .toImageList()
             .map {
-                it.copy(isFavoured = favouriteCatImagesDatabase.imagesDao().contains(it.id))
+                val favImage = favouriteCatImagesDatabase.imagesDao().get(it.id)
+                it.copy(
+                    isFavoured = favImage?.isFavoured ?: false,
+                    favId = favImage?.favId
+                )
             }
 
     suspend fun addFavourite(imageId: String, userId: String) {
@@ -49,9 +51,11 @@ object CatRepository {
             subId = userId,
             page = page,
             limit = pageSize
-        )
-            .map { it.image }
-            .toImageList()
-            .map { it.copy(isFavoured = true) }
+        ).toFavImageList()
+
+    suspend fun removeFavourite(favId: String) {
+        catService.removeFavourite(favouriteId = favId)
+        favouriteCatImagesDatabase.imagesDao().delete(favId = favId)
+    }
 
 }

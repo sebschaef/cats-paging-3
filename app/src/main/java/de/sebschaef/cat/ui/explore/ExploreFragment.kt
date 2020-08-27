@@ -13,6 +13,7 @@ import de.sebschaef.cat.R
 import de.sebschaef.cat.model.event.ExploreEvent
 import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.model.state.ExploreState
+import de.sebschaef.cat.model.state.ExploreState.*
 import de.sebschaef.cat.ui.adapter.CatImagesAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -51,8 +52,8 @@ class ExploreFragment : Fragment(), ExploreContract.View {
         }
     }
 
-    override fun render(exploreState: ExploreState) {
-        TODO("Not yet implemented")
+    override fun render(exploreState: ExploreState) = when (exploreState) {
+        is Refresh -> catImagesAdapter.refresh()
     }
 
     private fun onImageFavouriteClicked(image: Image, isFavoured: Boolean) {

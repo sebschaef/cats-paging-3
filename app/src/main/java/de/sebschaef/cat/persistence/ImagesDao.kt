@@ -22,7 +22,10 @@ interface ImagesDao {
     @Query("DELETE FROM favourite_cat_images")
     suspend fun clearAll()
 
-    @Query("SELECT EXISTS (SELECT * FROM favourite_cat_images WHERE id = :imageId LIMIT 1)")
-    suspend fun contains(imageId: String): Boolean
+    @Query("SELECT * FROM favourite_cat_images WHERE id = :imageId LIMIT 1")
+    suspend fun get(imageId: String): Image?
+
+    @Query("DELETE FROM favourite_cat_images WHERE favId = :favId")
+    suspend fun delete(favId: String)
 
 }

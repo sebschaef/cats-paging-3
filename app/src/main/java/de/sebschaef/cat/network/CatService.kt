@@ -3,10 +3,7 @@ package de.sebschaef.cat.network
 import de.sebschaef.cat.model.network.FavouriteItemResponse
 import de.sebschaef.cat.model.network.FavouriteRequest
 import de.sebschaef.cat.model.network.ImageResponse
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface CatService {
 
@@ -18,7 +15,9 @@ interface CatService {
     ): List<ImageResponse>
 
     @POST("/v1/favourites")
-    suspend fun addFavourite(@Body favouriteRequest: FavouriteRequest)
+    suspend fun addFavourite(
+        @Body favouriteRequest: FavouriteRequest
+    )
 
     @GET("/v1/favourites")
     suspend fun getFavourites(
@@ -26,5 +25,10 @@ interface CatService {
         @Query("limit") limit: Int = 10,
         @Query("page") page: Int = 0
     ): List<FavouriteItemResponse>
+
+    @DELETE("/v1/favourites/{favourite_id}")
+    suspend fun removeFavourite(
+        @Path("favourite_id") favouriteId: String
+    )
 
 }

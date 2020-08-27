@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import de.sebschaef.cat.R
 import de.sebschaef.cat.model.event.ExploreEvent
 import de.sebschaef.cat.model.event.FavouriteEvent
 import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.model.state.FavouriteState
+import de.sebschaef.cat.model.state.FavouriteState.*
 import de.sebschaef.cat.ui.adapter.CatImagesAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -34,7 +36,15 @@ class FavouritesFragment : Fragment(), FavouriteContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.rv_favourite_cat_images)
+        initRecyclerView()
+
+        favouritesViewModel.viewState.observe(viewLifecycleOwner) {
+            render(it)
+        }
+    }
+
+    private fun initRecyclerView() {
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_favourite_cat_images)
         recyclerView?.adapter = catImagesAdapter
         lifecycleScope.launch {
             favouritesViewModel.catImagesFlow.collectLatest {
@@ -43,8 +53,8 @@ class FavouritesFragment : Fragment(), FavouriteContract.View {
         }
     }
 
-    override fun render(favouriteState: FavouriteState) {
-        TODO("Not yet implemented")
+    override fun render(favouriteState: FavouriteState) = when (favouriteState) {
+        is Refresh -> catImagesAdapter.refresh()
     }
 
     private fun onImageFavouriteClicked(image: Image, isFavoured: Boolean) {

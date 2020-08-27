@@ -32,16 +32,34 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
         if (isFavoured) {
             favourImage(image)
         } else {
-            TODO()
+            unfavourImage(image)
         }
     }
 
     private fun favourImage(image: Image) {
         viewModelScope.launch(Dispatchers.IO) {
-            CatRepository.addFavourite(
-                imageId = image.id,
-                userId = "cat" // TODO get from resources or a dialog
-            )
+            try {
+                CatRepository.addFavourite(
+                    imageId = image.id,
+                    userId = "cat" // TODO get from resources or a dialog
+                )
+            } catch (e: Exception) {
+                // TODO
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun unfavourImage(image: Image) {
+        image.favId ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                CatRepository.removeFavourite(favId = image.favId)
+            } catch (e: Exception) {
+                // TODO
+                e.printStackTrace()
+            }
         }
     }
 
