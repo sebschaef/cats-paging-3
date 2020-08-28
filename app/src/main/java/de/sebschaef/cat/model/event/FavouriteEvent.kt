@@ -4,6 +4,7 @@ import de.sebschaef.cat.model.persistence.Image
 
 sealed class FavouriteEvent {
     data class ImageFavouredChanged(
+        val position: Int,
         val image: Image,
         val isFavoured: Boolean
     ) : FavouriteEvent()

@@ -25,24 +25,30 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
     override val viewState = MutableLiveData<ExploreState>()
 
     override fun onViewEvent(exploreEvent: ExploreEvent) = when (exploreEvent) {
-        is ImageFavouredChanged -> onImageFavouredChanged(exploreEvent.image, exploreEvent.isFavoured)
+        is ImageFavouredChanged -> onImageFavouredChanged(
+            position = exploreEvent.position,
+            image = exploreEvent.image,
+            isFavoured = exploreEvent.isFavoured
+        )
     }
 
-    private fun onImageFavouredChanged(image: Image, isFavoured: Boolean) {
+    private fun onImageFavouredChanged(position: Int, image: Image, isFavoured: Boolean) {
         if (isFavoured) {
-            favourImage(image)
+            favourImage(position, image)
         } else {
-            unfavourImage(image)
+            unfavourImage(position, image)
         }
     }
 
-    private fun favourImage(image: Image) {
+    private fun favourImage(position: Int, image: Image) {
+        image.isFavoured = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 CatRepository.addFavourite(
                     imageId = image.id,
                     userId = "cat" // TODO get from resources or a dialog
                 )
+                viewState.postValue(ExploreState.Load(position))
             } catch (e: Exception) {
                 // TODO
                 e.printStackTrace()
@@ -50,12 +56,14 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
         }
     }
 
-    private fun unfavourImage(image: Image) {
+    private fun unfavourImage(position: Int, image: Image) {
         image.favId ?: return
 
+        image.isFavoured = false
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 CatRepository.removeFavourite(favId = image.favId)
+                viewState.postValue(ExploreState.Load(position))
             } catch (e: Exception) {
                 // TODO
                 e.printStackTrace()

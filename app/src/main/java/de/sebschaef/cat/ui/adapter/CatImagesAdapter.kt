@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import de.sebschaef.cat.R
 import de.sebschaef.cat.model.persistence.Image
 
-class CatImagesAdapter(val onFavClicked: (Image, Boolean) -> Unit) :
+class CatImagesAdapter(val onFavClicked: (adapterPos: Int, image: Image, isFavoured: Boolean) -> Unit) :
     PagingDataAdapter<Image, ImageViewHolder>(ImageDiffer) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -32,9 +32,7 @@ class CatImagesAdapter(val onFavClicked: (Image, Boolean) -> Unit) :
                     if (image.isFavoured) R.drawable.ic_star_full else R.drawable.ic_star_outline
                 )
                 setOnClickListener {
-                    onFavClicked(image, !image.isFavoured)
-                    image.isFavoured = !image.isFavoured
-                    notifyItemChanged(position)
+                    onFavClicked(position, image, !image.isFavoured)
                 }
             }
         }

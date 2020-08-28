@@ -58,12 +58,17 @@ class FavouritesFragment : Fragment(), FavouriteContract.View {
     }
 
     override fun render(favouriteState: FavouriteState) = when (favouriteState) {
-        is Refresh -> catImagesAdapter.refresh()
+        is Load -> refresh(favouriteState.position)
     }
 
-    private fun onImageFavouriteClicked(image: Image, isFavoured: Boolean) {
+    private fun refresh(position: Int?) = position?.let {
+        catImagesAdapter.notifyItemChanged(position)
+    } ?: catImagesAdapter.refresh()
+
+    private fun onImageFavouriteClicked(adapterPos: Int, image: Image, isFavoured: Boolean) {
         favouritesViewModel.onViewEvent(
             FavouriteEvent.ImageFavouredChanged(
+                position = adapterPos,
                 image = image,
                 isFavoured = isFavoured
             )

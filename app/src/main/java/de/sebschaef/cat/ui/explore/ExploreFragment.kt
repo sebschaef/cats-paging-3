@@ -57,12 +57,17 @@ class ExploreFragment : Fragment(), ExploreContract.View {
     }
 
     override fun render(exploreState: ExploreState) = when (exploreState) {
-        is Refresh -> catImagesAdapter.refresh()
+        is Load -> refresh(exploreState.position)
     }
 
-    private fun onImageFavouriteClicked(image: Image, isFavoured: Boolean) {
+    private fun refresh(position: Int?) = position?.let {
+        catImagesAdapter.notifyItemChanged(it)
+    } ?: catImagesAdapter.refresh()
+
+    private fun onImageFavouriteClicked(adapterPos: Int, image: Image, isFavoured: Boolean) {
         exploreViewModel.onViewEvent(
             ExploreEvent.ImageFavouredChanged(
+                position = adapterPos,
                 image = image,
                 isFavoured = isFavoured
             )

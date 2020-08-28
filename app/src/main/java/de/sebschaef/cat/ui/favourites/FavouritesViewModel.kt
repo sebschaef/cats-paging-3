@@ -28,24 +28,29 @@ class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel {
     override val viewState = MutableLiveData<FavouriteState>()
 
     override fun onViewEvent(favouriteEvent: FavouriteEvent) = when (favouriteEvent) {
-        is ImageFavouredChanged -> onImageFavouredChanged(favouriteEvent.image, favouriteEvent.isFavoured)
+        is ImageFavouredChanged -> onImageFavouredChanged(
+            position = favouriteEvent.position,
+            image = favouriteEvent.image,
+            isFavoured = favouriteEvent.isFavoured
+        )
     }
 
-    private fun onImageFavouredChanged(image: Image, isFavoured: Boolean) {
+    private fun onImageFavouredChanged(position: Int, image: Image, isFavoured: Boolean) {
         if (isFavoured) {
-            favourImage(image)
+            favourImage(position, image)
         } else {
-            unfavourImage(image)
+            unfavourImage(position, image)
         }
     }
 
-    private fun favourImage(image: Image) {
+    private fun favourImage(position: Int, image: Image) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 CatRepository.addFavourite(
                     imageId = image.id,
                     userId = "cat" // TODO get from resources or a dialog
                 )
+                viewState.postValue(FavouriteState.Load(position))
             } catch (e: Exception) {
                 // TODO
                 e.printStackTrace()
@@ -53,12 +58,13 @@ class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel {
         }
     }
 
-    private fun unfavourImage(image: Image) {
+    private fun unfavourImage(position: Int, image: Image) {
         image.favId ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 CatRepository.removeFavourite(favId = image.favId)
+                viewState.postValue(FavouriteState.Load(position))
             } catch (e: Exception) {
                 // TODO
                 e.printStackTrace()
