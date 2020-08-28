@@ -63,11 +63,11 @@ class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel {
     }
 
     private fun unfavourImage(position: Int, image: Image) {
-        image.favId ?: return
+        val favId = image.favId ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                CatRepository.removeFavourite(favId = image.favId)
+                CatRepository.removeFavourite(favId)
                 viewState.postValue(FavouriteState.Load(position))
             } catch (e: Exception) {
                 viewState.postValue(FavouriteState.Error())

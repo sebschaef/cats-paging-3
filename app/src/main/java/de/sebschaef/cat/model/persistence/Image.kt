@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class Image(
     @PrimaryKey val id: String,
     val url: String,
-    val favId: String? = null,
+    var favId: String? = null,
     var isFavoured: Boolean = false // TODO remove and use favId only?
 )

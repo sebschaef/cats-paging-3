@@ -48,10 +48,11 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
         image.isFavoured = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                CatRepository.addFavourite(
+                val id = CatRepository.addFavourite(
                     imageId = image.id,
                     userId = "cat" // TODO get from resources or a dialog
                 )
+                id?.let { image.favId = it }
                 viewState.postValue(ExploreState.Load(position))
             } catch (e: Exception) {
                 viewState.postValue(ExploreState.Error())
@@ -60,12 +61,12 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
     }
 
     private fun unfavourImage(position: Int, image: Image) {
-        image.favId ?: return
+        val favId = image.favId ?: return
 
         image.isFavoured = false
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                CatRepository.removeFavourite(favId = image.favId)
+                CatRepository.removeFavourite(favId)
                 viewState.postValue(ExploreState.Load(position))
             } catch (e: Exception) {
                 viewState.postValue(ExploreState.Error())

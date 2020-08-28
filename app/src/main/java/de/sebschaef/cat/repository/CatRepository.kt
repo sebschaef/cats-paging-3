@@ -40,11 +40,10 @@ object CatRepository {
                 )
             }
 
-    suspend fun addFavourite(imageId: String, userId: String) {
+    suspend fun addFavourite(imageId: String, userId: String): String? =
         catService.addFavourite(
             FavouriteRequest(imageId = imageId, subId = userId)
-        )
-    }
+        ).id
 
     suspend fun getFavourites(userId: String, page: Int, pageSize: Int) =
         catService.getFavourites(

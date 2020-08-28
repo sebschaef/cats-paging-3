@@ -2,6 +2,7 @@ package de.sebschaef.cat.network
 
 import de.sebschaef.cat.model.network.FavouriteItemResponse
 import de.sebschaef.cat.model.network.FavouriteRequest
+import de.sebschaef.cat.model.network.FavouriteResponse
 import de.sebschaef.cat.model.network.ImageResponse
 import retrofit2.http.*
 
@@ -17,7 +18,7 @@ interface CatService {
     @POST("/v1/favourites")
     suspend fun addFavourite(
         @Body favouriteRequest: FavouriteRequest
-    )
+    ): FavouriteResponse
 
     @GET("/v1/favourites")
     suspend fun getFavourites(
