@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import de.sebschaef.cat.R
 import de.sebschaef.cat.model.event.ExploreEvent
 import de.sebschaef.cat.model.persistence.Image
@@ -25,6 +30,15 @@ class ExploreFragment : Fragment(), ExploreContract.View {
 
     private val catImagesAdapter = CatImagesAdapter(this::onImageFavouriteClicked)
 
+    private val coordinatorLayout: CoordinatorLayout?
+        get() = view?.findViewById(R.id.cl_coordinator)
+
+    private val recyclerView: RecyclerView?
+        get() = view?.findViewById(R.id.rv_random_cat_images)
+
+    private val swipeRefresh: SwipeRefreshLayout?
+        get() = view?.findViewById(R.id.swl_refresh)
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -37,14 +51,19 @@ class ExploreFragment : Fragment(), ExploreContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        initSwipeRefreshLayout()
 
         exploreViewModel.viewState.observe(viewLifecycleOwner) {
             render(it)
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        exploreViewModel.onViewEvent(ExploreEvent.Refresh)
+    }
+
     private fun initRecyclerView() {
-        val recyclerView = view?.findViewById<RecyclerView>(R.id.rv_random_cat_images)
         recyclerView?.adapter = catImagesAdapter.withLoadStateFooter(
             footer = LoadStateAdapter(catImagesAdapter)
         )
@@ -52,17 +71,42 @@ class ExploreFragment : Fragment(), ExploreContract.View {
         lifecycleScope.launch {
             exploreViewModel.catImagesFlow.collectLatest {
                 catImagesAdapter.submitData(it)
+                swipeRefresh?.isRefreshing = false
             }
+        }
+
+        lifecycleScope.launch {
+            catImagesAdapter.loadStateFlow.collectLatest {
+                if (it.refresh is LoadState.Error) {
+                    displayErrorMessage(getString(R.string.error_message))
+                }
+            }
+        }
+    }
+
+    private fun initSwipeRefreshLayout() {
+        swipeRefresh?.setOnRefreshListener {
+            exploreViewModel.onViewEvent(ExploreEvent.Refresh)
         }
     }
 
     override fun render(exploreState: ExploreState) = when (exploreState) {
         is Load -> refresh(exploreState.position)
+        is Error -> displayErrorMessage(exploreState.message)
     }
 
     private fun refresh(position: Int?) = position?.let {
         catImagesAdapter.notifyItemChanged(it)
-    } ?: catImagesAdapter.refresh()
+    } ?: run {
+        swipeRefresh?.isRefreshing = true
+        catImagesAdapter.refresh()
+    }
+
+    private fun displayErrorMessage(message: String) {
+        coordinatorLayout?.let {
+            Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show()
+        }
+    }
 
     private fun onImageFavouriteClicked(adapterPos: Int, image: Image, isFavoured: Boolean) {
         exploreViewModel.onViewEvent(

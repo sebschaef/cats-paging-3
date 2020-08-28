@@ -25,11 +25,16 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
     override val viewState = MutableLiveData<ExploreState>()
 
     override fun onViewEvent(exploreEvent: ExploreEvent) = when (exploreEvent) {
+        is Refresh -> refresh()
         is ImageFavouredChanged -> onImageFavouredChanged(
             position = exploreEvent.position,
             image = exploreEvent.image,
             isFavoured = exploreEvent.isFavoured
         )
+    }
+
+    private fun refresh() {
+        viewState.value = ExploreState.Load()
     }
 
     private fun onImageFavouredChanged(position: Int, image: Image, isFavoured: Boolean) {
