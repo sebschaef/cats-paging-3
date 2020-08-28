@@ -7,9 +7,13 @@ import androidx.paging.RemoteMediator
 import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.persistence.ImagesDatabase
 import de.sebschaef.cat.repository.CatRepository
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 @OptIn(ExperimentalPagingApi::class)
-class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>() {
+class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>(), KoinComponent {
+
+    private val imagesDatabase: ImagesDatabase by inject()
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Image>): MediatorResult {
         try {
@@ -22,7 +26,7 @@ class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>() {
             }
 
             val response = CatRepository.getFavourites("cat", loadPage, 10) // TODO no hardcoded values here
-            ImagesDatabase.instance.imagesDao().insertAll(response)
+            imagesDatabase.imagesDao().insertAll(response)
 
             return MediatorResult.Success(endOfPaginationReached = response.isEmpty())
         } catch (e: Exception) {

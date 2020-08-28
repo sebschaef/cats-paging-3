@@ -11,12 +11,4 @@ abstract class ImagesDatabase : RoomDatabase() {
 
     abstract fun imagesDao(): ImagesDao
 
-    companion object {
-        val instance = Room.databaseBuilder(
-            CatApplication.appContext,
-            ImagesDatabase::class.java,
-            "favourite_cat_database"
-        ).build()
-    }
-
 }

@@ -15,14 +15,18 @@ import de.sebschaef.cat.repository.CatRepository
 import de.sebschaef.cat.ui.adapter.FavouriteCatImagesRemoteMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel {
+class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel, KoinComponent {
+
+    private val imagesDatabase: ImagesDatabase by inject()
 
     val catImagesFlow = Pager(
         config = PagingConfig(pageSize = 10),
         remoteMediator = FavouriteCatImagesRemoteMediator()
     ) {
-        ImagesDatabase.instance.imagesDao().pagingSource()
+        imagesDatabase.imagesDao().pagingSource()
     }.flow.cachedIn(viewModelScope)
 
     override val viewState = MutableLiveData<FavouriteState>()

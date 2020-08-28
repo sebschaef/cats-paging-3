@@ -2,38 +2,23 @@ package de.sebschaef.cat.repository
 
 import de.sebschaef.cat.model.network.FavouriteRequest
 import de.sebschaef.cat.model.persistence.Image
-import de.sebschaef.cat.network.ApiKeyInterceptor
 import de.sebschaef.cat.network.CatService
 import de.sebschaef.cat.network.toFavImageList
 import de.sebschaef.cat.network.toImageList
 import de.sebschaef.cat.persistence.ImagesDatabase
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-object CatRepository {
+object CatRepository : KoinComponent {
 
-    // TODO Dependency injection
-    private val catService by lazy {
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(ApiKeyInterceptor())
-            .build()
-
-        Retrofit.Builder()
-            .baseUrl("https://api.thecatapi.com")
-            .addConverterFactory(MoshiConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-            .create(CatService::class.java)
-    }
-
-    private val favouriteCatImagesDatabase = ImagesDatabase.instance
+    private val catService: CatService by inject()
+    private val imagesDatabase: ImagesDatabase by inject()
 
     suspend fun getRandomCatImages(page: Int, pageSize: Int): List<Image> =
         catService.searchImages(page = page, limit = pageSize)
             .toImageList()
             .map {
-                val favImage = favouriteCatImagesDatabase.imagesDao().get(it.id)
+                val favImage = imagesDatabase.imagesDao().get(it.id)
                 it.copy(
                     isFavoured = favImage?.isFavoured ?: false,
                     favId = favImage?.favId
@@ -54,7 +39,7 @@ object CatRepository {
 
     suspend fun removeFavourite(favId: String) {
         catService.removeFavourite(favouriteId = favId)
-        favouriteCatImagesDatabase.imagesDao().delete(favId = favId)
+        imagesDatabase.imagesDao().delete(favId = favId)
     }
 
 }
