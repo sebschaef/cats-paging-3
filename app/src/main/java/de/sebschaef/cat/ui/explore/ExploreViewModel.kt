@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
 
-    // TODO make part of state flow
     val catImagesFlow = Pager(config = PagingConfig(pageSize = 10)) {
         RandomCatImagesPagingSource()
     }.flow.cachedIn(viewModelScope)

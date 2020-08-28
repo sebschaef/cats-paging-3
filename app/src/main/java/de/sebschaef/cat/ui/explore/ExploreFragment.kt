@@ -71,20 +71,21 @@ class ExploreFragment : Fragment(), ExploreContract.View {
         lifecycleScope.launch {
             exploreViewModel.catImagesFlow.collectLatest {
                 catImagesAdapter.submitData(it)
-                swipeRefresh?.isRefreshing = false
             }
         }
 
         lifecycleScope.launch {
             catImagesAdapter.loadStateFlow.collectLatest {
-                if (it.refresh is LoadState.Error) {
-                    displayErrorMessage(getString(R.string.error_message_fetch))
+                when (it.refresh) {
+                    is LoadState.Error -> displayErrorMessage(getString(R.string.error_message_fetch))
+                    is LoadState.NotLoading -> swipeRefresh?.isRefreshing = false
                 }
             }
         }
     }
 
     private fun initSwipeRefreshLayout() {
+        swipeRefresh?.isRefreshing = false
         swipeRefresh?.setOnRefreshListener {
             exploreViewModel.onViewEvent(ExploreEvent.Refresh)
         }
