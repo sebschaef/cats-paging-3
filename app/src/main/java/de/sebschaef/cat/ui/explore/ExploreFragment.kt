@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
-import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,10 +21,11 @@ import de.sebschaef.cat.ui.adapter.CatImagesAdapter
 import de.sebschaef.cat.ui.adapter.LoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ExploreFragment : Fragment(), ExploreContract.View {
 
-    private lateinit var exploreViewModel: ExploreViewModel
+    private val exploreViewModel: ExploreViewModel by viewModel()
 
     private val catImagesAdapter = CatImagesAdapter(this::onImageFavouriteClicked)
 
@@ -43,10 +42,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
-        exploreViewModel = ViewModelProvider(this).get(ExploreViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_explore, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_explore, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

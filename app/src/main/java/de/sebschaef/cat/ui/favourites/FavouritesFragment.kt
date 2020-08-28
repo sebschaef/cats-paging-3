@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.paging.LoadState
@@ -22,10 +21,11 @@ import de.sebschaef.cat.ui.adapter.CatImagesAdapter
 import de.sebschaef.cat.ui.adapter.LoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavouritesFragment : Fragment(), FavouriteContract.View {
 
-    private lateinit var favouritesViewModel: FavouritesViewModel
+    private val favouritesViewModel: FavouritesViewModel by viewModel()
 
     private val catImagesAdapter = CatImagesAdapter(this::onImageFavouriteClicked)
 
@@ -42,10 +42,7 @@ class FavouritesFragment : Fragment(), FavouriteContract.View {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
-        favouritesViewModel = ViewModelProvider(this).get(FavouritesViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_favourites, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_favourites, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
