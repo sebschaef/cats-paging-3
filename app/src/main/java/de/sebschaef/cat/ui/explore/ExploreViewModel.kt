@@ -55,8 +55,7 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
                 )
                 viewState.postValue(ExploreState.Load(position))
             } catch (e: Exception) {
-                // TODO
-                e.printStackTrace()
+                viewState.postValue(ExploreState.Error())
             }
         }
     }
@@ -70,8 +69,7 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
                 CatRepository.removeFavourite(favId = image.favId)
                 viewState.postValue(ExploreState.Load(position))
             } catch (e: Exception) {
-                // TODO
-                e.printStackTrace()
+                viewState.postValue(ExploreState.Error())
             }
         }
     }

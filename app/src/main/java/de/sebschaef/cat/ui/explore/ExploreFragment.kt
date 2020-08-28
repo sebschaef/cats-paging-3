@@ -78,7 +78,7 @@ class ExploreFragment : Fragment(), ExploreContract.View {
         lifecycleScope.launch {
             catImagesAdapter.loadStateFlow.collectLatest {
                 if (it.refresh is LoadState.Error) {
-                    displayErrorMessage(getString(R.string.error_message))
+                    displayErrorMessage(getString(R.string.error_message_fetch))
                 }
             }
         }
@@ -102,9 +102,10 @@ class ExploreFragment : Fragment(), ExploreContract.View {
         catImagesAdapter.refresh()
     }
 
-    private fun displayErrorMessage(message: String) {
+    private fun displayErrorMessage(message: String?) {
         coordinatorLayout?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show()
+            val msg = message ?: getString(R.string.error_message_generic)
+            Snackbar.make(it, msg, Snackbar.LENGTH_SHORT).show()
         }
     }
 

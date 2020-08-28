@@ -3,7 +3,8 @@
     <string name="title_explore">Explore</string>
     <string name="title_favourites">Favourites</string>
     <string name="retry">Retry</string>
-    <string name="error_message">We couldn\'t fetch your kitties, sorry. Retry it again later.</string>
+    <string name="error_message_fetch">We couldn\'t fetch your kitties, sorry. Retry it again later.</string>
+    <string name="error_message_generic">Oups, that didn\'t work. Please try again later.</string>
 
     <string name="username">cat</string>
 </resources>
