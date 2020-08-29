@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import de.sebschaef.cat.model.constant.Constants
 import de.sebschaef.cat.model.event.FavouriteEvent
 import de.sebschaef.cat.model.event.FavouriteEvent.*
 import de.sebschaef.cat.model.persistence.Image
@@ -23,7 +24,7 @@ class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel, KoinCompon
     private val imagesDatabase: ImagesDatabase by inject()
 
     val catImagesFlow = Pager(
-        config = PagingConfig(pageSize = 10),
+        config = PagingConfig(pageSize = Constants.PAGE_SIZE),
         remoteMediator = FavouriteCatImagesRemoteMediator()
     ) {
         imagesDatabase.imagesDao().pagingSource()
@@ -57,7 +58,7 @@ class FavouritesViewModel : ViewModel(), FavouriteContract.ViewModel, KoinCompon
             try {
                 CatRepository.addFavourite(
                     imageId = image.id,
-                    userId = "cat" // TODO get from resources or a dialog
+                    userId = Constants.USER_ID
                 )
                 viewState.postValue(FavouriteState.Load(position))
             } catch (e: Exception) {

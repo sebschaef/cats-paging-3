@@ -1,5 +1,6 @@
 package de.sebschaef.cat.network
 
+import de.sebschaef.cat.model.constant.Constants
 import de.sebschaef.cat.model.network.FavouriteItemResponse
 import de.sebschaef.cat.model.network.FavouriteRequest
 import de.sebschaef.cat.model.network.FavouriteResponse
@@ -10,7 +11,7 @@ interface CatService {
 
     @GET("/v1/images/search")
     suspend fun searchImages(
-        @Query("limit") limit: Int = 10,
+        @Query("limit") limit: Int = Constants.PAGE_SIZE,
         @Query("page") page: Int = 0,
         @Query("order") order: String = "random"
     ): List<ImageResponse>
@@ -23,7 +24,7 @@ interface CatService {
     @GET("/v1/favourites")
     suspend fun getFavourites(
         @Query("sub_id") subId: String,
-        @Query("limit") limit: Int = 10,
+        @Query("limit") limit: Int = Constants.PAGE_SIZE,
         @Query("page") page: Int = 0
     ): List<FavouriteItemResponse>
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import de.sebschaef.cat.model.constant.Constants
 import de.sebschaef.cat.model.event.ExploreEvent
 import de.sebschaef.cat.model.event.ExploreEvent.*
 import de.sebschaef.cat.model.persistence.Image
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
 
-    val catImagesFlow = Pager(config = PagingConfig(pageSize = 10)) {
+    val catImagesFlow = Pager(config = PagingConfig(pageSize = Constants.PAGE_SIZE)) {
         RandomCatImagesPagingSource()
     }.flow.cachedIn(viewModelScope)
 
@@ -49,7 +50,7 @@ class ExploreViewModel : ViewModel(), ExploreContract.ViewModel {
             try {
                 val id = CatRepository.addFavourite(
                     imageId = image.id,
-                    userId = "cat" // TODO get from resources or a dialog
+                    userId = Constants.USER_ID
                 )
                 id?.let { image.favId = it }
                 viewState.postValue(ExploreState.Load(position))
