@@ -19,8 +19,7 @@ fun List<FavouriteItemResponse>.toFavImageList(): List<Image> =
             Image(
                 favId = it.id,
                 id = it.image.id,
-                url = it.image.url,
-                isFavoured = true
+                url = it.image.url
             )
         }
         .toList()

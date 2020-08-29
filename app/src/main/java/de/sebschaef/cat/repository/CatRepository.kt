@@ -19,10 +19,7 @@ object CatRepository : KoinComponent {
             .toImageList()
             .map {
                 val favImage = imagesDatabase.imagesDao().get(it.id)
-                it.copy(
-                    isFavoured = favImage?.isFavoured ?: false,
-                    favId = favImage?.favId
-                )
+                it.copy(favId = favImage?.favId)
             }
 
     suspend fun addFavourite(imageId: String, userId: String): String? =

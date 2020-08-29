@@ -29,10 +29,11 @@ class CatImagesAdapter(val onFavClicked: (adapterPos: Int, image: Image, isFavou
 
             favIcon.apply {
                 setImageResource(
-                    if (image.isFavoured) R.drawable.ic_star_full else R.drawable.ic_star_outline
+                    image.favId?.let { R.drawable.ic_star_full } ?: R.drawable.ic_star_outline
                 )
                 setOnClickListener {
-                    onFavClicked(position, image, !image.isFavoured)
+                    val setFavoured = image.favId == null
+                    onFavClicked(position, image, setFavoured)
                 }
             }
         }
