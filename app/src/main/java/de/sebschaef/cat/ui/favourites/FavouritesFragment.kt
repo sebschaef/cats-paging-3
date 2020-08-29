@@ -67,7 +67,6 @@ class FavouritesFragment : Fragment(), FavouriteContract.View {
         lifecycleScope.launch {
             favouritesViewModel.catImagesFlow.collectLatest {
                 catImagesAdapter.submitData(it)
-                //swipeRefresh?.isRefreshing = false
             }
         }
 

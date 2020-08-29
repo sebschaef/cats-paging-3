@@ -13,7 +13,7 @@ import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.model.state.FavouriteState
 import de.sebschaef.cat.persistence.ImagesDatabase
 import de.sebschaef.cat.repository.CatRepository
-import de.sebschaef.cat.ui.adapter.FavouriteCatImagesRemoteMediator
+import de.sebschaef.cat.ui.favourites.paging.FavouriteCatImagesRemoteMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent

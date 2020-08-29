@@ -1,4 +1,4 @@
-package de.sebschaef.cat.ui.adapter
+package de.sebschaef.cat.ui.favourites.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -11,6 +11,10 @@ import de.sebschaef.cat.repository.CatRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * Fetches a certain page from the favourite cat images API and stores it in the database. The load
+ * function is called by the paging library.
+ */
 @OptIn(ExperimentalPagingApi::class)
 class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>(), KoinComponent {
 

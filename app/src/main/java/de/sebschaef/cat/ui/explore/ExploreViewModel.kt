@@ -12,7 +12,7 @@ import de.sebschaef.cat.model.event.ExploreEvent.*
 import de.sebschaef.cat.model.persistence.Image
 import de.sebschaef.cat.model.state.ExploreState
 import de.sebschaef.cat.repository.CatRepository
-import de.sebschaef.cat.ui.adapter.RandomCatImagesPagingSource
+import de.sebschaef.cat.ui.explore.paging.RandomCatImagesPagingSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
