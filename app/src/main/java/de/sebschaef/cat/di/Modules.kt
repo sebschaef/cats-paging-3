@@ -18,6 +18,7 @@ val appModule = module {
     viewModel { ExploreViewModel() }
     viewModel { FavouritesViewModel() }
 
+    // Room : CatDatabase
     single {
         Room.databaseBuilder(
             androidContext(),
@@ -26,6 +27,7 @@ val appModule = module {
         ).build()
     }
 
+    // Retrofit : CatService
     single {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(ApiKeyInterceptor())

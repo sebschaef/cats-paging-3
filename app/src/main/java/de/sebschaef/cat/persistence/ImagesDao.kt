@@ -10,9 +10,6 @@ import de.sebschaef.cat.model.persistence.Image
 @Dao
 interface ImagesDao {
 
-    @Query("SELECT * FROM favourite_cat_images")
-    suspend fun getAll(): List<Image>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(users: List<Image>)
 

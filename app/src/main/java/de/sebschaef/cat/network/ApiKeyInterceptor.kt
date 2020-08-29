@@ -1,6 +1,6 @@
 package de.sebschaef.cat.network
 
-import de.sebschaef.cat.model.Constants
+import de.sebschaef.cat.model.constant.Constants
 import okhttp3.Interceptor
 import okhttp3.Response
 
