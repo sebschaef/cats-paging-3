@@ -23,10 +23,10 @@ class FavouriteCatImagesRemoteMediator : RemoteMediator<Int, Image>(), KoinCompo
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Image>): MediatorResult {
         try {
             val loadPage = when (loadType) {
-                LoadType.REFRESH -> 0
+                LoadType.REFRESH -> 1
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> state.lastItemOrNull()?.let {
-                    state.pages.size + 1
+                    state.pages.size
                 } ?: return MediatorResult.Success(endOfPaginationReached = true)
             }
 
