@@ -1,7 +1,7 @@
-# Demo App with usage examples of the upcoming Jetpack Paging 3 library
+# Demo App with two examples for the upcoming Jetpack Paging 3 library
 
 The App uses the [The cat API](https://thecatapi.com/) to fetch an endless list of random cat images and lets the user select their favourites.
-![](https://sebschaef.bitbucket.io/images/screen_cat.png)
+![](https://sebschaef.bitbucket.io/images/screen_cat.png | width=200)
 
 ## Explore tab
 Displays an endless list of random cat images by using the API as the single `PagingSource`. The paged API data gets transformed into an UI model and displayed right away.
